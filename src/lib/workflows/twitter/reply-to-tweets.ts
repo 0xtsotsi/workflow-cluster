@@ -5,6 +5,7 @@ import { generateTweetReply } from '@/lib/openai';
 import { logger } from '@/lib/logger';
 import { db, useSQLite } from '@/lib/db';
 import { tweetRepliesTableSQLite, tweetRepliesTablePostgres } from '@/lib/schema';
+import { trackPost, trackRead } from '@/lib/usage-tracker';
 
 /**
  * Reply to Tweets Workflow
@@ -120,6 +121,9 @@ export async function replyToTweetsWorkflow(config: WorkflowConfig) {
         removePostsWithMedia: searchParams.removePostsWithMedia ?? true,
       });
 
+      // Track read usage for rate limit monitoring
+      await trackRead();
+
       logger.info({ count: results.results.length }, '✅ Found tweets');
       return { ...ctx, tweets: results.results };
     })
@@ -188,6 +192,9 @@ export async function replyToTweetsWorkflow(config: WorkflowConfig) {
         ctx.selectedTweet.tweet_id,
         ctx.generatedReply
       );
+
+      // Track post usage for rate limit monitoring
+      await trackPost();
 
       logger.info(
         { tweetId: ctx.selectedTweet.tweet_id, replyId: result.id },
