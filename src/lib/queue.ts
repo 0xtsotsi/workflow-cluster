@@ -30,10 +30,34 @@ const redisConfig = {
 // Alternative: Use REDIS_URL if provided (e.g., from Railway, Upstash)
 const getRedisConnection = () => {
   if (process.env.REDIS_URL) {
-    return new Redis(process.env.REDIS_URL, {
+    const redis = new Redis(process.env.REDIS_URL, {
       maxRetriesPerRequest: null,
       enableReadyCheck: false,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          logger.error('Redis connection failed after 3 retries');
+          return null; // Stop retrying
+        }
+        const delay = Math.min(times * 1000, 5000);
+        logger.warn({ attempt: times, delay }, 'Retrying Redis connection');
+        return delay;
+      },
     });
+
+    // Add connection event listeners for better debugging
+    redis.on('connect', () => {
+      logger.info('Redis connected successfully');
+    });
+
+    redis.on('error', (error) => {
+      logger.error({ error }, 'Redis connection error');
+    });
+
+    redis.on('close', () => {
+      logger.warn('Redis connection closed');
+    });
+
+    return redis;
   }
 
   // Only connect to localhost if explicitly configured

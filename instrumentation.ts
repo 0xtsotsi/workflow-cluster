@@ -40,7 +40,23 @@ export async function register() {
         warnings.push('⚠️  WARNING: REDIS_URL not set - jobs will be lost on restart!');
         warnings.push('   → Add Redis: Railway Dashboard → New → Database → Add Redis');
       } else {
-        logger.info('✅ Redis connected');
+        logger.info('✅ Redis URL configured');
+        // Test Redis connection
+        try {
+          const { Redis } = await import('ioredis');
+          const testRedis = new Redis(process.env.REDIS_URL, {
+            maxRetriesPerRequest: 1,
+            connectTimeout: 5000,
+            lazyConnect: true,
+          });
+          await testRedis.connect();
+          await testRedis.ping();
+          logger.info('✅ Redis connection verified');
+          await testRedis.quit();
+        } catch (error) {
+          logger.error({ error }, '❌ Redis connection failed - check REDIS_URL is correct');
+          warnings.push('⚠️  Redis connection failed - verify REDIS_URL is correct');
+        }
       }
 
       // Log all warnings
