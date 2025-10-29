@@ -17,7 +17,7 @@ let postgresDb: ReturnType<typeof drizzlePostgres> | null = null;
 if (useSQLite) {
   // SQLite configuration for local development
   console.log('🗄️  Using SQLite database for local development');
-  const sqlite = new Database('local.db');
+  const sqlite = new Database('data/local.db');
 
   // Enable WAL mode for better concurrency during builds
   // Prevents database locking when multiple processes (dev server, build, typechecking) access the DB

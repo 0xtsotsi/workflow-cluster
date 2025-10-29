@@ -15,8 +15,8 @@
 export async function register() {
   // Only run in Node.js runtime (not Edge)
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { initializeScheduler } = await import('./src/lib/jobs');
-    const { logger } = await import('./src/lib/logger');
+    const { initializeScheduler } = await import('./lib/jobs');
+    const { logger } = await import('./lib/logger');
 
     // Check production environment setup
     const isProduction = process.env.NODE_ENV === 'production';

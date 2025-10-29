@@ -10,7 +10,7 @@ export default {
   dialect: useSQLite ? 'sqlite' : 'postgresql',
   dbCredentials: useSQLite
     ? {
-        url: 'local.db',
+        url: 'data/local.db',
       }
     : {
         url: databaseUrl!,

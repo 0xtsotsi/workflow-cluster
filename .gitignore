@@ -24,10 +24,7 @@
 *.pem
 
 # database
-*.db
-*.db-journal
-*.db-wal
-*.db-shm
+data/
 
 # debug
 npm-debug.log*
