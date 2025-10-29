@@ -42,9 +42,11 @@ export default function RootLayout({
         className={`${interHeading.variable} ${interBody.variable} ${inter.variable} antialiased`}
       >
         <AppLoader />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          {children}
+          <ChatbotWidget />
+        </SessionProvider>
         <Toaster />
-        <ChatbotWidget />
       </body>
     </html>
   );
