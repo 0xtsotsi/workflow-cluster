@@ -112,7 +112,7 @@ export function WorkflowCard({ workflow, onDeleted, onExport, onRun, onViewHisto
   const RunIcon = runButtonConfig.icon;
 
   return (
-    <Card className="relative overflow-hidden rounded-lg border border-border/50 bg-surface/80 backdrop-blur-sm shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
+    <Card className="group relative overflow-hidden rounded-lg border border-border/50 bg-surface/80 backdrop-blur-sm shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 hover:scale-[1.02]">
       <CardHeader className="pb-3 pt-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -125,8 +125,9 @@ export function WorkflowCard({ workflow, onDeleted, onExport, onRun, onViewHisto
               size="icon-sm"
               onClick={() => onExport(workflow.id)}
               title="Export workflow"
+              className="transition-all duration-200 hover:scale-110 active:scale-95"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5" />
             </Button>
             <Button
               variant="ghost"
@@ -134,8 +135,9 @@ export function WorkflowCard({ workflow, onDeleted, onExport, onRun, onViewHisto
               onClick={handleDelete}
               disabled={deleting}
               title="Delete workflow"
+              className="transition-all duration-200 hover:scale-110 active:scale-95 hover:text-destructive"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4 w-4 transition-transform duration-200 group-hover:rotate-12" />
             </Button>
           </div>
         </div>
@@ -177,40 +179,40 @@ export function WorkflowCard({ workflow, onDeleted, onExport, onRun, onViewHisto
             variant="ghost"
             size="sm"
             onClick={handleRunClick}
-            className="h-7 px-2"
+            className="h-7 px-2 transition-all duration-200 hover:scale-105 active:scale-95 group"
             title={`Execute workflow via ${runButtonConfig.label.toLowerCase()}`}
           >
-            <RunIcon className="h-3.5 w-3.5 mr-1" />
+            <RunIcon className="h-3.5 w-3.5 mr-1 transition-transform duration-200 group-hover:scale-110" />
             <span className="text-xs">{runButtonConfig.label}</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setSettingsDialogOpen(true)}
-            className="h-7 px-2"
+            className="h-7 px-2 transition-all duration-200 hover:scale-105 active:scale-95 group"
             title="Configure workflow settings"
           >
-            <Sliders className="h-3.5 w-3.5 mr-1" />
+            <Sliders className="h-3.5 w-3.5 mr-1 transition-transform duration-200 group-hover:rotate-90" />
             <span className="text-xs">Settings</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setCredentialsConfigOpen(true)}
-            className="h-7 px-2"
+            className="h-7 px-2 transition-all duration-200 hover:scale-105 active:scale-95 group"
             title="Configure credentials"
           >
-            <Key className="h-3.5 w-3.5 mr-1" />
+            <Key className="h-3.5 w-3.5 mr-1 transition-transform duration-200 group-hover:-rotate-12" />
             <span className="text-xs">Credentials</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onViewHistory(workflow.id)}
-            className="h-7 px-2"
+            className="h-7 px-2 transition-all duration-200 hover:scale-105 active:scale-95 group"
             title="View execution history"
           >
-            <History className="h-3.5 w-3.5 mr-1" />
+            <History className="h-3.5 w-3.5 mr-1 transition-transform duration-200 group-hover:rotate-180" />
             <span className="text-xs">History</span>
           </Button>
         </div>

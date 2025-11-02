@@ -2,6 +2,113 @@
 
 Utility scripts for the b0t project.
 
+## Workflow Management
+
+### Search Modules
+
+Find available modules for workflow creation:
+
+```bash
+# List all categories and modules
+npx tsx scripts/search-modules.ts
+
+# Search for specific functionality
+npx tsx scripts/search-modules.ts "email"
+npx tsx scripts/search-modules.ts "twitter"
+
+# List all modules in a category
+npx tsx scripts/search-modules.ts --category communication
+npx tsx scripts/search-modules.ts --category social
+
+# List all modules with details
+npx tsx scripts/search-modules.ts --list
+```
+
+### Validate Workflow
+
+Validate a workflow JSON file before importing:
+
+```bash
+# Validate from file
+npx tsx scripts/validate-workflow.ts workflow.json
+
+# Validate from stdin
+cat workflow.json | npx tsx scripts/validate-workflow.ts --stdin
+```
+
+Checks:
+- JSON structure is valid
+- All module paths exist in registry
+- Variable references are correct
+- Required fields are present
+
+### Import Workflow
+
+Import a workflow JSON file into the database:
+
+```bash
+# Import from file
+npx tsx scripts/import-workflow.ts workflow.json
+
+# Import from stdin
+cat workflow.json | npx tsx scripts/import-workflow.ts --stdin
+```
+
+The workflow will be:
+- Validated via the API
+- Created in the database with a unique ID
+- Immediately available in the UI at `/dashboard/workflows`
+
+### Test Workflow
+
+Test a workflow and get detailed error analysis:
+
+```bash
+# Dry run (structure check only, no execution)
+npx tsx scripts/test-workflow.ts workflow.json --dry-run
+
+# Execute workflow from file (temporary import + run + cleanup)
+npx tsx scripts/test-workflow.ts workflow.json
+
+# Execute existing workflow by ID
+npx tsx scripts/test-workflow.ts abc-123-def-456
+```
+
+**Smart Error Analysis:**
+The test script automatically categorizes errors and tells you who can fix them:
+- ✅ **Claude can fix**: Module paths, variable references, type mismatches, invalid inputs
+- ⚠️  **User action required**: Missing API keys, network issues, permission errors
+- 🤝 **Both**: Rate limits, complex logic errors
+
+Output includes:
+- Execution duration
+- Full output or detailed error
+- Error category and suggestions
+- Direct links to fix issues
+
+### Complete Workflow Creation Example
+
+```bash
+# 1. Search for modules you need
+npx tsx scripts/search-modules.ts "datetime"
+
+# 2. Create workflow JSON file (workflow.json)
+
+# 3. Validate the structure
+npx tsx scripts/validate-workflow.ts workflow.json
+
+# 4. Test it (dry run first)
+npx tsx scripts/test-workflow.ts workflow.json --dry-run
+
+# 5. Test it (real execution)
+npx tsx scripts/test-workflow.ts workflow.json
+
+# 6. If successful, import permanently
+npx tsx scripts/import-workflow.ts workflow.json
+
+# 7. Open http://localhost:3000/dashboard/workflows and run it!
+```
+
 ## Export Railway Environment Variables
 
 **Scripts:**

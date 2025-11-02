@@ -51,32 +51,34 @@ export function CredentialsConfigDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] scrollbar-none">
         <DialogHeader>
-          <DialogTitle>Credentials & API Keys: {workflowName}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-foreground">Credentials & API Keys: {workflowName}</DialogTitle>
+          <DialogDescription className="text-muted-foreground">
             Configure OAuth connections and API keys required for this workflow.
             Select which accounts or keys to use for each platform.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
+        <div className="py-4 scrollbar-none">
           {loading ? (
             <div className="space-y-2">
               <div className="text-xs font-medium text-muted-foreground">Required Credentials:</div>
               <div className="space-y-1.5">
-                <Skeleton className="h-10 w-full rounded-md" />
-                <Skeleton className="h-10 w-full rounded-md" />
-                <Skeleton className="h-10 w-full rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md animate-pulse" />
+                <Skeleton className="h-10 w-full rounded-md animate-pulse" />
+                <Skeleton className="h-10 w-full rounded-md animate-pulse" />
               </div>
             </div>
           ) : hasCredentials === false ? (
-            <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950 p-6 text-center">
-              <Info className="h-8 w-8 mx-auto mb-3 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
+            <div className="rounded-lg border border-border/50 bg-muted/30 p-6 text-center transition-all duration-200 hover:bg-muted/40 hover:border-border">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/10 dark:bg-blue-500/20 mb-3 transition-transform duration-200 hover:scale-110">
+                <Info className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-sm font-medium text-foreground mb-2">
                 No External Credentials Required
               </h3>
-              <p className="text-xs text-blue-800 dark:text-blue-200">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 This workflow doesn&apos;t use any external APIs or services that require authentication.
                 If you add steps that connect to platforms like Twitter, OpenAI, or other services,
                 their credentials will appear here.

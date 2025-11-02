@@ -164,21 +164,21 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
             return (
               <div
                 key={cred.platform}
-                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                  <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                   <Select
                     value={selectedCredentials[cred.platform] || cred.accounts[0]?.id}
                     onValueChange={(value) => handleCredentialSelect(cred.platform, value)}
                   >
-                    <SelectTrigger className="h-6 text-xs w-auto min-w-[120px] py-0">
+                    <SelectTrigger className="h-6 text-xs w-auto min-w-[120px] py-0 text-foreground transition-all duration-200 hover:bg-muted">
                       <SelectValue placeholder="Select account" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-background text-foreground">
                       {cred.accounts.map((account) => (
-                        <SelectItem key={account.id} value={account.id} className="text-xs py-1 min-h-0">
+                        <SelectItem key={account.id} value={account.id} className="text-xs py-1 min-h-0 text-foreground">
                           <div className="flex items-center gap-1">
                             {account.accountName}
                             {account.isExpired && (
@@ -194,10 +194,10 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-6 px-2 text-xs flex-shrink-0"
+                    className="h-6 px-2 text-xs flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 group"
                     onClick={() => handleOAuthConnect(cred.platform)}
                   >
-                    <ExternalLink className="h-3 w-3 mr-1" />
+                    <ExternalLink className="h-3 w-3 mr-1 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     Add
                   </Button>
                 </div>
@@ -211,11 +211,11 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
             return (
               <div
                 key={cred.platform}
-                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                  <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                   <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
                     <Check className="h-3 w-3" />
                     <span className="text-muted-foreground">({account.accountName})</span>
@@ -228,11 +228,11 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-6 w-6 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 flex-shrink-0"
+                    className="h-6 w-6 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 flex-shrink-0 transition-all duration-200 hover:scale-110 active:scale-95 group"
                     onClick={() => handleDisconnect(account.id, cred.platform)}
                     title="Disconnect account"
                   >
-                    <Unplug className="h-3 w-3 text-muted-foreground hover:text-red-600 dark:hover:text-red-400" />
+                    <Unplug className="h-3 w-3 text-muted-foreground group-hover:text-red-600 dark:group-hover:text-red-400 transition-all duration-200 group-hover:rotate-12" />
                   </Button>
                 </div>
               </div>
@@ -244,11 +244,11 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
             return (
               <div
                 key={cred.platform}
-                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                  <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                   <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
                     <X className="h-3 w-3" />
                     <span>Not connected</span>
@@ -257,10 +257,10 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-6 px-2 text-xs flex-shrink-0"
+                  className="h-6 px-2 text-xs flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 group"
                   onClick={() => handleOAuthConnect(cred.platform)}
                 >
-                  <ExternalLink className="h-3 w-3 mr-1" />
+                  <ExternalLink className="h-3 w-3 mr-1 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   Connect
                 </Button>
               </div>
@@ -272,21 +272,21 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
             return (
               <div
                 key={cred.platform}
-                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                  <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                   <Select
                     value={selectedCredentials[cred.platform] || cred.keys[0]?.id}
                     onValueChange={(value) => handleCredentialSelect(cred.platform, value)}
                   >
-                    <SelectTrigger className="h-6 text-xs w-auto min-w-[120px] py-0">
+                    <SelectTrigger className="h-6 text-xs w-auto min-w-[120px] py-0 text-foreground transition-all duration-200 hover:bg-muted">
                       <SelectValue placeholder="Select key" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-background text-foreground">
                       {cred.keys.map((key) => (
-                        <SelectItem key={key.id} value={key.id} className="text-xs py-1 min-h-0">
+                        <SelectItem key={key.id} value={key.id} className="text-xs py-1 min-h-0 text-foreground">
                           {key.name}
                         </SelectItem>
                       ))}
@@ -297,10 +297,10 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-6 px-2 text-xs flex-shrink-0"
+                    className="h-6 px-2 text-xs flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 group"
                     onClick={() => handleAddApiKey(cred.platform)}
                   >
-                    <Key className="h-3 w-3 mr-1" />
+                    <Key className="h-3 w-3 mr-1 transition-transform duration-200 group-hover:-rotate-12" />
                     Add
                   </Button>
                 </div>
@@ -314,11 +314,11 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
             return (
               <div
                 key={cred.platform}
-                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                  <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                   <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
                     <Check className="h-3 w-3" />
                     <span className="text-muted-foreground">({key.name})</span>
@@ -332,11 +332,11 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
           return (
             <div
               key={cred.platform}
-              className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-surface/30 px-3 py-2"
+              className="flex items-center justify-between gap-2 rounded-md border border-border/50 bg-muted/30 px-3 py-2 transition-all duration-200 hover:bg-muted/40 hover:border-border"
             >
               <div className="flex items-center gap-2 min-w-0">
                 <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs font-medium truncate">{cred.displayName}</span>
+                <span className="text-xs font-medium truncate text-foreground">{cred.displayName}</span>
                 <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
                   <X className="h-3 w-3" />
                   <span>Not added</span>
@@ -345,10 +345,10 @@ export function WorkflowCredentialsStatus({ workflowId }: WorkflowCredentialsSta
               <Button
                 size="sm"
                 variant="outline"
-                className="h-6 px-2 text-xs flex-shrink-0"
+                className="h-6 px-2 text-xs flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 group"
                 onClick={() => handleAddApiKey(cred.platform)}
               >
-                <Key className="h-3 w-3 mr-1" />
+                <Key className="h-3 w-3 mr-1 transition-transform duration-200 group-hover:-rotate-12" />
                 Add Key
               </Button>
             </div>

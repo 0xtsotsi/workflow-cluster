@@ -52,3 +52,6 @@ export * from './communication';
 
 // Data Modules (NEW)
 export * from './data';
+
+// DevTools Modules (NEW)
+export * from './devtools';

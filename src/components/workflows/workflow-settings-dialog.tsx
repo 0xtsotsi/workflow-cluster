@@ -244,8 +244,8 @@ export function WorkflowSettingsDialog({
     switch (field.type) {
       case 'textarea':
         return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm">
+          <div key={field.key} className="bg-muted/50 rounded-lg p-3 border border-border/50 space-y-2">
+            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm font-medium">
               {field.label}
             </Label>
             <Textarea
@@ -253,7 +253,7 @@ export function WorkflowSettingsDialog({
               value={(value as string) || ''}
               onChange={(e) => updateStepSetting(stepKey, field.key, e.target.value)}
               placeholder={field.placeholder}
-              className="text-sm min-h-[100px]"
+              className="text-sm min-h-[100px] bg-background text-foreground"
             />
             {field.description && (
               <p className="text-xs text-muted-foreground">{field.description}</p>
@@ -263,8 +263,8 @@ export function WorkflowSettingsDialog({
 
       case 'number':
         return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm">
+          <div key={field.key} className="bg-muted/50 rounded-lg p-3 border border-border/50 space-y-2">
+            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm font-medium">
               {field.label}
             </Label>
             <Input
@@ -284,7 +284,7 @@ export function WorkflowSettingsDialog({
                 )
               }
               placeholder={field.placeholder}
-              className="text-sm"
+              className="text-sm bg-background text-foreground"
             />
             {field.description && (
               <p className="text-xs text-muted-foreground">{field.description}</p>
@@ -294,15 +294,15 @@ export function WorkflowSettingsDialog({
 
       case 'select':
         return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm">
+          <div key={field.key} className="bg-muted/50 rounded-lg p-3 border border-border/50 space-y-2">
+            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm font-medium">
               {field.label}
             </Label>
             <select
               id={`${stepKey}-${field.key}`}
               value={(value as string) || ''}
               onChange={(e) => updateStepSetting(stepKey, field.key, e.target.value)}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="flex h-9 w-full rounded-md border border-input bg-background text-foreground px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               {field.options?.map((option) => (
                 <option key={option} value={option}>
@@ -319,8 +319,8 @@ export function WorkflowSettingsDialog({
       case 'text':
       default:
         return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm">
+          <div key={field.key} className="bg-muted/50 rounded-lg p-3 border border-border/50 space-y-2">
+            <Label htmlFor={`${stepKey}-${field.key}`} className="text-sm font-medium">
               {field.label}
             </Label>
             <Input
@@ -328,7 +328,7 @@ export function WorkflowSettingsDialog({
               value={(value as string) || ''}
               onChange={(e) => updateStepSetting(stepKey, field.key, e.target.value)}
               placeholder={field.placeholder}
-              className="text-sm"
+              className="text-sm bg-background text-foreground"
             />
             {field.description && (
               <p className="text-xs text-muted-foreground">{field.description}</p>
@@ -348,7 +348,7 @@ export function WorkflowSettingsDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="overflow-y-auto py-3 px-1 -mx-1 flex-1 space-y-3">
+        <div className="overflow-y-auto py-3 px-1 -mx-1 flex-1 space-y-3 scrollbar-none">
           {hasAnySettings ? (
             <>
               {/* Trigger Configuration */}
@@ -357,9 +357,9 @@ export function WorkflowSettingsDialog({
                   open={openSteps['trigger']}
                   onOpenChange={() => toggleStep('trigger')}
                 >
-                  <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-sm hover:bg-muted/50 transition-colors">
+                  <CollapsibleTrigger className="group flex items-center justify-between w-full rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-sm hover:bg-muted/50 hover:border-border transition-all duration-200">
                     <div className="flex flex-col items-start gap-0.5">
-                      <span className="font-medium text-foreground">
+                      <span className="font-medium text-foreground group-hover:text-primary transition-colors">
                         Trigger: {formatTriggerName(workflowTrigger.type)}
                       </span>
                       <span className="text-xs text-muted-foreground">
@@ -367,12 +367,12 @@ export function WorkflowSettingsDialog({
                       </span>
                     </div>
                     <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-200 ${
+                      className={`h-4 w-4 text-muted-foreground group-hover:text-primary transition-all duration-300 ${
                         openSteps['trigger'] ? 'rotate-180' : ''
                       }`}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-3 px-3 space-y-3">
+                  <CollapsibleContent className="pt-3 px-1 space-y-3">
                     {getTriggerFields(workflowTrigger.type, workflowTrigger.config).map((field) =>
                       renderTriggerField(field)
                     )}
@@ -389,20 +389,20 @@ export function WorkflowSettingsDialog({
                     open={openSteps[stepKey]}
                     onOpenChange={() => toggleStep(stepKey)}
                   >
-                    <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-sm hover:bg-muted/50 transition-colors">
+                    <CollapsibleTrigger className="group flex items-center justify-between w-full rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-sm hover:bg-muted/50 hover:border-border transition-all duration-200">
                       <div className="flex flex-col items-start gap-0.5">
-                        <span className="font-medium text-foreground">
+                        <span className="font-medium text-foreground group-hover:text-primary transition-colors">
                           Step {step.stepIndex + 1}: {step.moduleCategory}
                         </span>
                         <span className="text-xs text-muted-foreground">{step.moduleName}</span>
                       </div>
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-200 ${
+                        className={`h-4 w-4 text-muted-foreground group-hover:text-primary transition-all duration-300 ${
                           openSteps[stepKey] ? 'rotate-180' : ''
                         }`}
                       />
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="pt-3 px-3 space-y-3">
+                    <CollapsibleContent className="pt-3 px-1 space-y-3">
                       {step.configurableFields.map((field) => renderField(stepKey, field))}
                     </CollapsibleContent>
                   </Collapsible>

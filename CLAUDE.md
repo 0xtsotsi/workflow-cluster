@@ -30,13 +30,16 @@ The system is organized around **composable modules** in `src/modules/`:
 **Payments:** Stripe
 **Productivity:** Google Calendar
 
-**Legacy pre-built workflows** exist in the codebase as examples but will be migrated to the LLM-generated approach.
+**Legacy pre-built workflows** exist in `src/app/social-media/` and `src/app/content/` as examples.
 
-**Next Steps:**
-- Build LLM workflow generation system
-- Create workflow execution engine with trigger support
-- Add module documentation for AI context
-- Build simple chat interface for workflow creation
+**Current Implementation Status:**
+- ✅ Module registry with 100+ composable functions
+- ✅ Workflow execution engine with variable passing and control flow
+- ✅ Workflow management UI (list, run, configure, import/export)
+- ✅ Trigger system (manual, cron schedules, webhooks)
+- ✅ Execution history tracking and result display
+- 🚧 LLM workflow generation (Claude generates workflows on request)
+- 🚧 Chat-based workflow creation interface
 
 ## Project Structure
 
