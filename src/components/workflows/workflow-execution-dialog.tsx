@@ -181,7 +181,6 @@ export function WorkflowExecutionDialog({
                 : 'sm:max-w-md'
           }
           onOpenAutoFocus={triggerType === 'chat' ? (e) => e.preventDefault() : undefined}
-          onPointerDownOutside={triggerType === 'chat' ? (e) => e.preventDefault() : undefined}
         >
           {triggerType === 'chat' && !isFullscreen ? (
             <DialogHeader>
