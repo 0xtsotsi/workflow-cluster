@@ -61,6 +61,7 @@ export function WorkflowExecutionDialog({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTriggerData, setCurrentTriggerData] = useState<Record<string, unknown> | undefined>();
   const chatInputExecuteRef = useRef<(() => void) | null>(null);
+  const hasShownToastRef = useRef(false);
 
   // Use the workflow progress hook for real-time updates
   const { state: progressState, reset: resetProgress} = useWorkflowProgress(
@@ -77,12 +78,14 @@ export function WorkflowExecutionDialog({
       setShowOutputModal(false);
       setExecuting(false);
       resetProgress();
+      hasShownToastRef.current = false;
     }
   }, [open, resetProgress]);
 
   // Update execution result when progress completes
   useEffect(() => {
-    if (progressState.status === 'completed') {
+    if (progressState.status === 'completed' && !hasShownToastRef.current) {
+      hasShownToastRef.current = true;
       setExecutionResult({
         id: 'completed',
         status: 'success',
@@ -119,6 +122,7 @@ export function WorkflowExecutionDialog({
     setExecuting(true);
     setExecutionResult(null);
     resetProgress();
+    hasShownToastRef.current = false;
   }, [resetProgress]);
 
   const getTriggerDescription = () => {
