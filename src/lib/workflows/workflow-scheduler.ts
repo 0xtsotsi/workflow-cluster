@@ -54,8 +54,7 @@ class WorkflowScheduler {
         );
       }
     } catch (error) {
-      logger.error({ error }, 'Failed to initialize workflow scheduler');
-      throw error;
+      // Error already logged by syncWorkflows, don't log again
     }
   }
 
@@ -134,8 +133,8 @@ class WorkflowScheduler {
         );
       }
     } catch (error) {
+      // Only log error, don't throw (handled by caller)
       logger.error({ error }, 'Failed to sync workflows');
-      throw error;
     }
   }
 

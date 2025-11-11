@@ -135,8 +135,7 @@ export async function register() {
     });
 
     // Initialize workflow scheduler (for cron triggers)
-    workflowScheduler.initialize().catch(error => {
-      logger.error({ error }, 'Failed to initialize workflow scheduler');
-    });
+    // Error logging handled inside initialize()
+    workflowScheduler.initialize();
   }
 }
