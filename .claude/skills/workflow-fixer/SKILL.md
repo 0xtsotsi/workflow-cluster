@@ -13,23 +13,37 @@ description: "YOU MUST USE THIS SKILL when the user needs to DEBUG, FIX, or VALI
 
 **REQUIRED - always run in order:**
 ```bash
-# 1. Auto-fix common issues (fixes 90% automatically)
-npx tsx scripts/auto-fix-workflow.ts workflow/{name}.json --write
+# 1. Validate structure, modules, and workflow correctness (comprehensive AJV validation)
+npm run validate workflow/{name}.json
 
-# 2. Validate structure and modules
-npx tsx scripts/validate-workflow.ts workflow/{name}.json
-
-# 3. Validate output display compatibility
-npx tsx scripts/validate-output-display.ts workflow/{name}.json
-
-# 4. Test execution
+# 2. Test execution
 npx tsx scripts/test-workflow.ts workflow/{name}.json
 
-# 5. Import to database
+# 3. Import to database
 npx tsx scripts/import-workflow.ts workflow/{name}.json
 ```
 
-**Auto-fix handles**: AI SDK wrappers, .content refs, min tokens, zipToObjects arrays, module case, variable typos, returnValue placement
+**New validation system**:
+- Uses AJV for fast JSON Schema validation
+- Validates module paths against actual source files
+- Checks variable references and data flow
+- Provides detailed error messages with fix suggestions
+
+**For incremental fixes, use JSON Patch**:
+```bash
+npm run patch workflow/{name}.json fix-patch.json --write
+```
+
+Example patch file:
+```json
+[
+  {
+    "op": "replace",
+    "path": "/config/steps/0/module",
+    "value": "correct.module.name"
+  }
+]
+```
 
 ---
 
@@ -38,9 +52,9 @@ npx tsx scripts/import-workflow.ts workflow/{name}.json
 ### Module Errors
 
 **"Module not found"**
-- Re-search with different keywords
+- Re-search with different keywords: `npm run search <keyword> -- --limit 5`
 - Check lowercase: `social.twitter` not `Social.Twitter`
-- Verify: `npx tsx scripts/search-modules.ts "keyword"`
+- For JSON output: `npm run search <keyword> -- --format json --limit 5`
 
 **"Function not found"**
 - Registry out of sync: `npm run generate:registry`
@@ -233,12 +247,14 @@ Temp import → execute → cleanup + error analysis
 
 ## Debugging Steps
 
-1. **Read error message** - Note exact text and category
-2. **Run auto-fix** - `auto-fix-workflow.ts --write`
-3. **Find in catalog above** - Match error to solution
-4. **Apply fix** - Edit workflow JSON
-5. **Re-validate** - Run validation pipeline from step 2
-6. **Test** - Dry-run first, then full test
+1. **Read error message** - Note exact text and category (new validator provides detailed suggestions)
+2. **Find in catalog above** - Match error to solution
+3. **Apply fix** - Edit workflow JSON directly OR use JSON Patch:
+   ```bash
+   npm run patch workflow/{name}.json fix-patch.json --write
+   ```
+4. **Re-validate** - Run validation: `npm run validate workflow/{name}.json`
+5. **Test** - Dry-run first, then full test
 
 ---
 
@@ -247,9 +263,10 @@ Temp import → execute → cleanup + error analysis
 ### Update Existing Workflow
 
 1. Read: `cat workflow/{name}.json`
-2. Edit JSON
-3. Validate: Run auto-fix → validate → test
-4. Re-import: `npx tsx scripts/import-workflow.ts workflow/{name}.json`
+2. Edit JSON (or use JSON Patch: `npm run patch workflow/{name}.json fix.json --write`)
+3. Validate: `npm run validate workflow/{name}.json`
+4. Test: `npx tsx scripts/test-workflow.ts workflow/{name}.json`
+5. Re-import: `npx tsx scripts/import-workflow.ts workflow/{name}.json`
 
 ### Create New Version
 

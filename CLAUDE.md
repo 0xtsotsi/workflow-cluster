@@ -57,3 +57,7 @@ If changes affect server/worker (not hot-reloadable):
 - **Database:** PostgreSQL, Drizzle ORM, Redis (BullMQ)
 - **AI:** Anthropic Claude, OpenAI GPT
 - **Testing:** Vitest, JSDOM
+
+## Documentation
+
+Do not create documentation UNLESS specifically requested to by the user as this wastes context.

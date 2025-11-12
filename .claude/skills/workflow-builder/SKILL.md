@@ -32,8 +32,13 @@ Identify: **What data** → **Transform** → **When to run**
 
 ### 2. Search Modules
 ```bash
-npx tsx scripts/search-modules.ts "keyword"
+npm run search <keyword> -- --limit 5
 ```
+**For JSON output (machine-readable):**
+```bash
+npm run search <keyword> -- --format json --limit 5
+```
+
 Only use modules from search results. Verify exact names.
 
 **Verify file exists:**
@@ -129,23 +134,26 @@ See `examples.md` for complete working examples with annotations.
 
 **REQUIRED - run in order:**
 ```bash
-# 1. Auto-fix common issues
-npx tsx scripts/auto-fix-workflow.ts workflow/{name}.json --write
+# 1. Validate structure, modules, and workflow correctness (with AJV)
+npm run validate workflow/{name}.json
 
-# 2. Validate structure
-npx tsx scripts/validate-workflow.ts workflow/{name}.json
-
-# 3. Validate output display
-npx tsx scripts/validate-output-display.ts workflow/{name}.json
-
-# 4. Test execution
+# 2. Test execution
 npx tsx scripts/test-workflow.ts workflow/{name}.json
 
-# 5. Import to database
+# 3. Import to database
 npx tsx scripts/import-workflow.ts workflow/{name}.json
 ```
 
-**If errors**: Use `/fix-workflow` for debugging.
+**If validation errors occur:**
+- Read the detailed error messages with suggestions
+- Apply fixes to the workflow JSON
+- Use JSON Patch for incremental fixes:
+  ```bash
+  npm run patch workflow/{name}.json fix-patch.json --write
+  ```
+- Re-run validation after fixes
+
+**If errors persist**: Use `/fix-workflow` for debugging.
 
 ---
 
@@ -331,7 +339,7 @@ Access: `{{trigger.message}}`, `{{trigger.chatId}}`, `{{trigger.userId}}`
 
 ## Troubleshooting
 
-**Module not found**: Re-search with different keywords
+**Module not found**: Re-search with different keywords using `npm run search <keyword> -- --limit 5`
 **AI SDK errors**: Check options wrapper and .content access
 **Variable undefined**: Check outputAs in previous steps
 **Credential error**: `grep "credential\." workflow/*.json` for exact names

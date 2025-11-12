@@ -12,9 +12,14 @@ Identify: **What data** → **Transform** → **When to run**
 
 ### 2. Search Modules
 ```bash
-npx tsx scripts/search-modules.ts "keyword"
+npm run search <keyword> -- --limit 5
 ```
 **Only use modules from search results.** Verify exact names.
+
+**For JSON output (machine-readable):**
+```bash
+npm run search <keyword> -- --format json --limit 5
+```
 
 **CRITICAL: Verify file exists before using:**
 ```bash
@@ -92,18 +97,16 @@ Check the function signature in search results to determine wrapper type:
 # 1. Auto-fix common issues (fixes 90% of errors automatically)
 npx tsx scripts/auto-fix-workflow.ts workflow/{name}.json --write
 
-# 2. Validate structure and modules
-npx tsx scripts/validate-workflow.ts workflow/{name}.json
+# 2. Validate structure, modules, and output display (NEW: comprehensive validation with AJV)
+npm run validate workflow/{name}.json
 
-# 3. Validate output display type compatibility
-npx tsx scripts/validate-output-display.ts workflow/{name}.json
-
-# 4. Test execution (optional: add --dry-run for structure preview only)
+# 3. Test execution (optional: add --dry-run for structure preview only)
 npx tsx scripts/test-workflow.ts workflow/{name}.json
 
-# 5. If errors occur, fix them and re-run from step 2
+# 4. If errors occur, fix them with JSON Patch (NEW: incremental updates)
+npm run patch workflow/{name}.json fix-patch.json --write
 
-# 6. Import to database
+# 5. Import to database
 npx tsx scripts/import-workflow.ts workflow/{name}.json
 ```
 
@@ -117,11 +120,13 @@ npx tsx scripts/import-workflow.ts workflow/{name}.json
 - returnValue placement
 
 **What to do when validation fails:**
-- **"Module not found"** → Re-search modules with different keywords
+- **"Module not found"** → Re-search modules: `npm run search <keyword> -- --limit 5`
 - **"Function not found"** → Run `npm run generate:registry` to sync
-- **"Variable undefined"** → Check `outputAs` in previous steps
+- **"Variable undefined"** → Check `outputAs` in previous steps (NEW: validation shows suggestions)
 - **"Type mismatch"** → Check function signature and return type
 - **"Credential error"** → Check existing workflows for exact credential name
+
+**NEW: Validation now provides detailed, actionable error messages with suggestions!**
 
 ## ⚠️ Critical Requirements (Common Mistakes)
 
