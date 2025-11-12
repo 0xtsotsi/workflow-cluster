@@ -1,5 +1,4 @@
 import { scheduler, ScheduledJob } from '../scheduler';
-import { exampleEvery5Minutes, exampleHourly, exampleDaily } from './example';
 import { cleanupOAuthState } from './cleanup-oauth-state';
 import { refreshExpiringTokens } from './refresh-expiring-tokens';
 import { logger } from '../logger';
@@ -21,26 +20,6 @@ import { appSettingsTable } from '../schema';
  * Set enabled: false to disable a job
  */
 const jobs: ScheduledJob[] = [
-  // Example jobs (disabled by default)
-  {
-    name: 'example-every-5-minutes',
-    schedule: '*/5 * * * *', // Every 5 minutes
-    task: exampleEvery5Minutes,
-    enabled: false, // Set to true to enable this example job
-  },
-  {
-    name: 'example-hourly',
-    schedule: '0 * * * *', // Every hour at minute 0
-    task: exampleHourly,
-    enabled: false, // Set to true to enable this example job
-  },
-  {
-    name: 'example-daily',
-    schedule: '0 0 * * *', // Every day at midnight
-    task: exampleDaily,
-    enabled: false, // Set to true to enable this example job
-  },
-
   // Production jobs
   {
     name: 'cleanup-oauth-state',
@@ -147,8 +126,5 @@ export function stopScheduler() {
 
 // Export individual job functions for manual testing
 export {
-  exampleEvery5Minutes,
-  exampleHourly,
-  exampleDaily,
   cleanupOAuthState,
 };

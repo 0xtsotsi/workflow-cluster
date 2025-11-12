@@ -56,45 +56,5 @@ export async function rapidApiRequest<T = unknown>(
   }
 }
 
-/**
- * Example: Twitter API via RapidAPI
- */
-export async function getRapidApiTwitterTimeline(username: string) {
-  return rapidApiRequest(
-    'twitter-api45.p.rapidapi.com',
-    '/timeline.php',
-    'GET',
-    { screenname: username }
-  );
-}
-
-/**
- * Example: Instagram API via RapidAPI
- */
-export async function getRapidApiInstagramProfile(username: string) {
-  return rapidApiRequest(
-    'instagram-scraper-api2.p.rapidapi.com',
-    '/v1/info',
-    'GET',
-    { username_or_id_or_url: username }
-  );
-}
-
-/**
- * Example: YouTube API via RapidAPI
- */
-export async function getRapidApiYouTubeComments(videoId: string) {
-  return rapidApiRequest(
-    'youtube-v31.p.rapidapi.com',
-    '/commentThreads',
-    'GET',
-    {
-      part: 'snippet',
-      videoId,
-      maxResults: 100,
-    }
-  );
-}
-
 // Export the base request function for custom API calls
 export { rapidApiRequest as rapidApi };

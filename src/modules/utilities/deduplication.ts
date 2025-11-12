@@ -3,81 +3,9 @@ import { logger } from '@/lib/logger';
 /**
  * Deduplication Module
  *
- * Generic deduplication functions for workflows to track and filter
- * already-processed items. Works with any table and ID column.
- *
- * NOTE: Database-dependent functions are deprecated. They were designed for SQLite
- * and need to be migrated to PostgreSQL/Drizzle ORM.
- *
- * The in-memory deduplication functions (deduplicateBy, deduplicateByMultiple, etc.)
- * are still fully functional and recommended for use.
+ * Generic in-memory deduplication functions for workflows to track and filter
+ * already-processed items.
  */
-
-// ============================================================================
-// DEPRECATED DATABASE FUNCTIONS
-// These require migration to PostgreSQL/Drizzle ORM
-// ============================================================================
-
-export async function filterProcessed(params: {
-  tableName: string;
-  idColumn: string;
-  idsToCheck: string[];
-}): Promise<string[]> {
-  const { tableName, idColumn } = params;
-  logger.error({ tableName, idColumn }, 'Deduplication module filterProcessed() is deprecated and not implemented for PostgreSQL');
-  throw new Error(
-    'Database-dependent deduplication functions are deprecated. They were designed for SQLite. ' +
-    'Please migrate to PostgreSQL/Drizzle ORM or use the in-memory deduplication functions. ' +
-    'See deduplicateBy(), deduplicateByMultiple(), excludeByIds() for alternatives.'
-  );
-}
-
-export async function hasProcessed(params: {
-  tableName: string;
-  idColumn: string;
-  idToCheck: string;
-}): Promise<boolean> {
-  const { tableName, idColumn } = params;
-  logger.error({ tableName, idColumn }, 'Deduplication module hasProcessed() is deprecated and not implemented for PostgreSQL');
-  throw new Error(
-    'Database-dependent deduplication functions are deprecated. They were designed for SQLite. ' +
-    'Please migrate to PostgreSQL/Drizzle ORM or use the in-memory deduplication functions. ' +
-    'See deduplicateBy(), deduplicateByMultiple(), excludeByIds() for alternatives.'
-  );
-}
-
-export async function filterProcessedItems<T extends Record<string, unknown>>(params: {
-  items: T[];
-  tableName: string;
-  idColumn: string;
-  itemIdField: string;
-}): Promise<T[]> {
-  const { tableName, idColumn } = params;
-  logger.error({ tableName, idColumn }, 'Deduplication module filterProcessedItems() is deprecated and not implemented for PostgreSQL');
-  throw new Error(
-    'Database-dependent deduplication functions are deprecated. They were designed for SQLite. ' +
-    'Please migrate to PostgreSQL/Drizzle ORM or use the in-memory deduplication functions. ' +
-    'See deduplicateBy(), deduplicateByMultiple(), excludeByIds() for alternatives.'
-  );
-}
-
-export async function markAsProcessed(params: {
-  tableName: string;
-  record: Record<string, unknown>;
-}): Promise<void> {
-  const { tableName } = params;
-  logger.error({ tableName }, 'Deduplication module markAsProcessed() is deprecated and not implemented for PostgreSQL');
-  throw new Error(
-    'Database-dependent deduplication functions are deprecated. They were designed for SQLite. ' +
-    'Please migrate to PostgreSQL/Drizzle ORM or use the in-memory deduplication functions. ' +
-    'See deduplicateBy(), deduplicateByMultiple(), excludeByIds() for alternatives.'
-  );
-}
-
-// ============================================================================
-// IN-MEMORY DEDUPLICATION FUNCTIONS
-// These are fully functional and recommended for use
-// ============================================================================
 
 /**
  * In-Memory Deduplication Functions
