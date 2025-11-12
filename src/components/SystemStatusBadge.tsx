@@ -18,6 +18,9 @@ interface SystemStatusInfo {
   credentialsCached: number;
 }
 
+// Cache status in memory (survives route changes)
+let statusCache: SystemStatusInfo | null = null;
+
 const STATUS_CONFIG = {
   cold: {
     label: 'Cold',
@@ -46,11 +49,14 @@ const STATUS_CONFIG = {
 };
 
 export function SystemStatusBadge() {
-  const [statusInfo, setStatusInfo] = useState<SystemStatusInfo>({
-    status: 'cold',
-    modulesLoaded: 0,
-    totalModules: 0,
-    credentialsCached: 0,
+  const [statusInfo, setStatusInfo] = useState<SystemStatusInfo>(() => {
+    // Initialize with cached data if available
+    return statusCache || {
+      status: 'cold',
+      modulesLoaded: 0,
+      totalModules: 0,
+      credentialsCached: 0,
+    };
   });
 
   useEffect(() => {
@@ -61,6 +67,7 @@ export function SystemStatusBadge() {
         if (response.ok) {
           const data = await response.json();
           setStatusInfo(data);
+          statusCache = data; // Update cache
         }
       } catch (error) {
         console.error('Failed to fetch system status:', error);

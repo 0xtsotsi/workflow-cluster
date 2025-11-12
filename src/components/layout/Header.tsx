@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useClient } from '@/components/providers/ClientProvider';
+import { useWeather } from '@/hooks/useWeather';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ export function Header() {
   const [timezone, setTimezone] = useState<string>('');
   const { data: session, status } = useSession();
   const { currentClient, clients, setCurrentClient, isLoading: clientsLoading } = useClient();
+  const { display: weatherDisplay } = useWeather();
 
   useEffect(() => {
     // Get user's timezone
@@ -74,12 +76,18 @@ export function Header() {
             <SystemStatusBadge />
           )}
 
-          {/* Timezone Clock */}
+          {/* Timezone Clock & Weather */}
           {currentTime && (
             <div className="hidden md:flex items-center gap-1.5 text-xs text-gray-700 ml-3 pl-3 border-l border-gray-alpha-400">
               <span className="font-mono tabular-nums">{currentTime}</span>
               <span className="text-gray-500">·</span>
               <span className="text-gray-600">{timezone}</span>
+              {weatherDisplay && (
+                <>
+                  <span className="text-gray-400 mx-0.5">|</span>
+                  <span className="text-gray-600">{weatherDisplay}</span>
+                </>
+              )}
             </div>
           )}
         </div>
