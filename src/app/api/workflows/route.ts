@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { workflowsTable, chatConversationsTable } from '@/lib/schema';
-import { eq, and, isNull, count } from 'drizzle-orm';
+import { eq, and, isNull, sql } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
@@ -36,6 +36,7 @@ export async function GET(request: Request) {
       whereConditions.push(isNull(workflowsTable.organizationId));
     }
 
+    // Fetch workflows with conversation counts in a single query using LEFT JOIN
     const rawWorkflows = await db
       .select({
         id: workflowsTable.id,
@@ -49,39 +50,38 @@ export async function GET(request: Request) {
         lastRunStatus: workflowsTable.lastRunStatus,
         lastRunOutput: workflowsTable.lastRunOutput,
         runCount: workflowsTable.runCount,
+        conversationCount: sql<number>`COALESCE(COUNT(CASE WHEN ${chatConversationsTable.status} = 'active' THEN 1 END), 0)`.as('conversation_count'),
       })
       .from(workflowsTable)
+      .leftJoin(
+        chatConversationsTable,
+        eq(chatConversationsTable.workflowId, workflowsTable.id)
+      )
       .where(and(...whereConditions))
+      .groupBy(
+        workflowsTable.id,
+        workflowsTable.name,
+        workflowsTable.description,
+        workflowsTable.status,
+        workflowsTable.trigger,
+        workflowsTable.config,
+        workflowsTable.createdAt,
+        workflowsTable.lastRun,
+        workflowsTable.lastRunStatus,
+        workflowsTable.lastRunOutput,
+        workflowsTable.runCount
+      )
       .orderBy(workflowsTable.createdAt);
 
     // Parse config and trigger if they're strings
-    const workflows = await Promise.all(
-      rawWorkflows.map(async (workflow) => {
-        const parsedTrigger = typeof workflow.trigger === 'string' ? JSON.parse(workflow.trigger) : workflow.trigger;
-
-        // For chat workflows, get conversation count
-        let conversationCount = 0;
-        if (parsedTrigger.type === 'chat') {
-          const result = await db
-            .select({ count: count() })
-            .from(chatConversationsTable)
-            .where(
-              and(
-                eq(chatConversationsTable.workflowId, workflow.id),
-                eq(chatConversationsTable.status, 'active')
-              )
-            );
-          conversationCount = result[0]?.count || 0;
-        }
-
-        return {
-          ...workflow,
-          config: typeof workflow.config === 'string' ? JSON.parse(workflow.config) : workflow.config,
-          trigger: parsedTrigger,
-          conversationCount,
-        };
-      })
-    );
+    const workflows = rawWorkflows.map((workflow) => {
+      return {
+        ...workflow,
+        config: typeof workflow.config === 'string' ? JSON.parse(workflow.config) : workflow.config,
+        trigger: typeof workflow.trigger === 'string' ? JSON.parse(workflow.trigger) : workflow.trigger,
+        conversationCount: workflow.conversationCount,
+      };
+    });
 
     return NextResponse.json({ workflows });
   } catch (error) {

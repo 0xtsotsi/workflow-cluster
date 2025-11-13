@@ -1,6 +1,11 @@
 import { scheduler, ScheduledJob } from '../scheduler';
 import { cleanupOAuthState } from './cleanup-oauth-state';
 import { refreshExpiringTokens } from './refresh-expiring-tokens';
+import { cleanupWorkflowRuns } from './cleanup-workflow-runs';
+import { cleanupChatMessages } from './cleanup-chat-messages';
+import { cleanupJobLogs } from './cleanup-job-logs';
+import { cleanupTweetReplies } from './cleanup-tweet-replies';
+import { cleanupInvitations } from './cleanup-invitations';
 import { logger } from '../logger';
 import { db } from '../db';
 import { appSettingsTable } from '../schema';
@@ -20,7 +25,7 @@ import { appSettingsTable } from '../schema';
  * Set enabled: false to disable a job
  */
 const jobs: ScheduledJob[] = [
-  // Production jobs
+  // Production jobs - authentication & tokens
   {
     name: 'cleanup-oauth-state',
     schedule: '*/15 * * * *', // Every 15 minutes
@@ -31,6 +36,38 @@ const jobs: ScheduledJob[] = [
     name: 'refresh-expiring-tokens',
     schedule: '*/15 * * * *', // Every 15 minutes
     task: refreshExpiringTokens,
+    enabled: true,
+  },
+
+  // Data retention cleanup jobs - run daily at off-peak hours
+  {
+    name: 'cleanup-workflow-runs',
+    schedule: '0 2 * * *', // Daily at 2 AM
+    task: cleanupWorkflowRuns,
+    enabled: true,
+  },
+  {
+    name: 'cleanup-chat-messages',
+    schedule: '0 3 * * *', // Daily at 3 AM
+    task: cleanupChatMessages,
+    enabled: true,
+  },
+  {
+    name: 'cleanup-job-logs',
+    schedule: '0 4 * * *', // Daily at 4 AM
+    task: cleanupJobLogs,
+    enabled: true,
+  },
+  {
+    name: 'cleanup-tweet-replies',
+    schedule: '0 5 * * *', // Daily at 5 AM
+    task: cleanupTweetReplies,
+    enabled: true,
+  },
+  {
+    name: 'cleanup-invitations',
+    schedule: '0 6 * * *', // Daily at 6 AM
+    task: cleanupInvitations,
     enabled: true,
   },
 
@@ -127,4 +164,10 @@ export function stopScheduler() {
 // Export individual job functions for manual testing
 export {
   cleanupOAuthState,
+  refreshExpiringTokens,
+  cleanupWorkflowRuns,
+  cleanupChatMessages,
+  cleanupJobLogs,
+  cleanupTweetReplies,
+  cleanupInvitations,
 };

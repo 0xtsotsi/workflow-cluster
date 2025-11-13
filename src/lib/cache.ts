@@ -97,6 +97,10 @@ export const CacheKeys = {
   userCredentials: (userId: string) => `user:credentials:${userId}`,
   workflowConfig: (workflowId: string) => `workflow:config:${workflowId}`,
   workflowRuns: (workflowId: string) => `workflow:runs:${workflowId}`,
+  // Dashboard & Stats Caching
+  dashboardStats: (userId: string, organizationId?: string) =>
+    `dashboard:stats:${userId}${organizationId ? `:${organizationId}` : ''}`,
+  organizationMemberships: (userId: string) => `user:orgs:${userId}`,
   // API Response Caching (70-85% reduction in duplicate calls)
   twitterUser: (userId: string) => `twitter:user:${userId}`,
   youtubeVideo: (videoId: string) => `youtube:video:${videoId}`,
@@ -114,6 +118,9 @@ export const CacheTTL = {
   CREDENTIALS: 300,         // 5 minutes
   WORKFLOW_CONFIG: 600,     // 10 minutes
   WORKFLOW_RUNS: 60,        // 1 minute
+  // Dashboard & Stats
+  DASHBOARD_STATS: 60,      // 1 minute (reduce DB load for frequent dashboard views)
+  ORG_MEMBERSHIPS: 300,     // 5 minutes (checked on every API request)
   // API Response TTLs
   USER_PROFILES: 1800,      // 30 minutes (Twitter users, etc.)
   VIDEO_METADATA: 3600,     // 1 hour (YouTube videos)

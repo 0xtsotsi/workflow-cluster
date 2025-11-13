@@ -113,11 +113,9 @@ export async function getCredential(
 
   const credential = credentials[0];
 
-  // Update last used timestamp
-  await db
-    .update(userCredentialsTable)
-    .set({ lastUsed: new Date() })
-    .where(eq(userCredentialsTable.id, credential.id));
+  // Note: lastUsed timestamp update removed for performance
+  // Credentials are cached, so this was creating unnecessary write load
+  // The lastUsed field is still available for manual tracking if needed
 
   const decryptedValue = decrypt(credential.encryptedValue);
 
@@ -327,11 +325,9 @@ export async function getCredentialFields(
 
   const credential = credentials[0];
 
-  // Update last used timestamp
-  await db
-    .update(userCredentialsTable)
-    .set({ lastUsed: new Date() })
-    .where(eq(userCredentialsTable.id, credential.id));
+  // Note: lastUsed timestamp update removed for performance
+  // Credentials are cached, so this was creating unnecessary write load
+  // The lastUsed field is still available for manual tracking if needed
 
   // Check if multi-field credential
   if (credential.metadata && typeof credential.metadata === 'object' && 'fields' in credential.metadata) {

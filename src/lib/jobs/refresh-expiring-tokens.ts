@@ -11,6 +11,7 @@ import { refreshOAuthToken } from '../oauth-token-manager';
  * by refreshing tokens before they're needed.
  *
  * Runs every 15 minutes and refreshes tokens expiring in the next hour.
+ * Processes in batches of 100 to prevent memory issues and timeouts.
  */
 export async function refreshExpiringTokens(): Promise<void> {
   try {
@@ -18,6 +19,7 @@ export async function refreshExpiringTokens(): Promise<void> {
 
     // Find accounts with tokens expiring in the next hour
     const oneHourFromNow = Math.floor(Date.now() / 1000) + 3600;
+    const BATCH_SIZE = 100; // Process max 100 tokens per run
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbAny = db as any;
@@ -27,7 +29,8 @@ export async function refreshExpiringTokens(): Promise<void> {
       .from(accountsTable)
       .where(
         sql`${accountsTable.expires_at} IS NOT NULL AND ${accountsTable.expires_at} < ${oneHourFromNow} AND ${accountsTable.expires_at} > ${Math.floor(Date.now() / 1000)}`
-      );
+      )
+      .limit(BATCH_SIZE);
 
     if (expiringAccounts.length === 0) {
       logger.debug('No tokens expiring in the next hour');
@@ -36,7 +39,7 @@ export async function refreshExpiringTokens(): Promise<void> {
 
     logger.info(
       { tokenCount: expiringAccounts.length },
-      `Found ${expiringAccounts.length} tokens expiring in the next hour`
+      `Found ${expiringAccounts.length} tokens expiring in the next hour${expiringAccounts.length === BATCH_SIZE ? ' (limited to batch size)' : ''}`
     );
 
     // Refresh each token (sequentially to avoid overwhelming OAuth providers)
